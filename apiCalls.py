@@ -1,6 +1,5 @@
 import requests
 import json
-import time
 
 ###################################################################################################
 # Setup API request
@@ -39,7 +38,7 @@ class GetExercises:
         else:
             print(f"Failed to retrieve the exercises for body part {exerciseInfo["bodypart"]}. Status code: {response.status_code}")
 
-    # Retrieve a list of all the body parts that have exercises
+    # Retrieve a list of all the equipment used in exercises
     def get_equipment_list(self):
         url=self.url
         headers=self.headers
@@ -52,12 +51,12 @@ class GetExercises:
         else:
             print(f"Failed to retrieve the list of equipment. Status code: {response.status_code}")
 
-    # Retrieve a list of exercises by body part
+    # Retrieve a list of exercises by equipment
     def get_exercises_by_equipType(self,**equipmentInfo):
         url=self.url
         headers=self.headers
 
-        exercisesURL=f"{url}/equipment/{equipmentInfo["type"]}?limit={equipmentInfo["limit"]}&offset={equipmentInfo["offset"]}"   # exercisesURL="https://exercisedb.p.rapidapi.com/exercises/bodyPart/back?limit=10&offset=0"
+        exercisesURL=f"{url}/equipment/{equipmentInfo["type"]}?limit={equipmentInfo["limit"]}&offset={equipmentInfo["offset"]}" 
 
         response = requests.get(exercisesURL, headers=headers)
         if response.status_code == 200:
@@ -66,7 +65,7 @@ class GetExercises:
         else:
             print(f"Failed to retrieve the equipment type: {equipmentInfo["type"]}. Status code: {response.status_code}")
 
-    # Retrieve a list of all the body parts that have exercises
+    # Retrieve a list of all the muscles that have exercises
     def get_muscle_list(self):
         url=self.url
         headers=self.headers
@@ -79,12 +78,12 @@ class GetExercises:
         else:
             print(f"Failed to retrieve the list of muscles. Status code: {response.status_code}")
 
-    # Retrieve a list of exercises by body part
+    # Retrieve a list of exercises by muscle group
     def get_exercises_by_muscle(self,**muscleInfo):
         url=self.url
         headers=self.headers
 
-        exercisesURL=f"{url}/target/{muscleInfo["target"]}?limit={muscleInfo["limit"]}&offset={muscleInfo["offset"]}"   # exercisesURL="https://exercisedb.p.rapidapi.com/exercises/bodyPart/back?limit=10&offset=0"
+        exercisesURL=f"{url}/target/{muscleInfo["target"]}?limit={muscleInfo["limit"]}&offset={muscleInfo["offset"]}" 
 
         response = requests.get(exercisesURL, headers=headers)
         if response.status_code == 200:
@@ -93,29 +92,44 @@ class GetExercises:
         else:
             print(f"Failed to retrieve the equipment type: {muscleInfo["target"]}. Status code: {response.status_code}")
 
-###################################################################################################
-# Instantiate the class
-exercises=GetExercises()
+    # Retrieve a list of exercises
+    def get_exercises(self,**exerciseInfo):
+        url=self.url
+        headers=self.headers
 
-parts=exercises.get_body_part_list()
-print("Size of the list of body parts returned is:",len(parts))
-for i in parts:
-    exerciseJson=exercises.get_exercises_by_bodypart(bodypart=i,limit=10,offset=0) #using keyword arguments
-    print("The number of exercises returned is",len(exerciseJson))
-    #items will be accessed like this: exerciseJson[0]['equipment']
+        exercisesURL=f"{url}?limit={exerciseInfo["limit"]}&offset={exerciseInfo["offset"]}" 
 
-equipment=exercises.get_equipment_list()
-print("Size of the list of equipment returned is:",len(equipment))
-for equipType in equipment:
-    exerciseByEquipJson=exercises.get_exercises_by_equipType(type=equipType,limit=10,offset=0) #using keyword arguments
-    print("The number of exercises returned is",len(exerciseByEquipJson))
-    #items will be accessed like this: exerciseJson[0]['equipment']
+        response = requests.get(exercisesURL, headers=headers)
+        if response.status_code == 200:
+            print("Retrieved the exercises.")
+            return(response.json())
+        else:
+            print(f"Failed to retrieve any exercises. Status code: {response.status_code}")
 
-muscles=exercises.get_muscle_list()
-print("Size of the list of equipment returned is:",len(muscles))
-for muscle in muscles:
-    exerciseByMuscleJson=exercises.get_exercises_by_muscle(target=muscle,limit=10,offset=0) #using keyword arguments
-    print("The number of exercises returned is",len(exerciseByMuscleJson))
-    #items will be accessed like this: exerciseJson[0]['equipment']
+    # Retrieve a list of exercises by Id
+    def get_exercises_by_id(self,exerciseId):
+        url=self.url
+        headers=self.headers
 
-time.sleep(1)
+        exercisesURL=f"{url}/exercise/{exerciseId}" 
+
+        response = requests.get(exercisesURL, headers=headers)
+        if response.status_code == 200:
+            print(f"Retrieved the exercises by id: {exerciseId}")
+            return(response.json())
+        else:
+            print(f"Failed to retrieve any exercises by id {exerciseId}. Status code: {response.status_code}")
+
+    # Retrieve a list of exercises by name
+    def get_exercises_by_name(self,**nameInfo):
+        url=self.url
+        headers=self.headers
+
+        exercisesURL=f"{url}/name/{nameInfo["name"]}?limit={nameInfo["limit"]}&offset={nameInfo["offset"]}" 
+
+        response = requests.get(exercisesURL, headers=headers)
+        if response.status_code == 200:
+            print(f"Retrieved the exercises by the exercise name: {nameInfo["name"]}.")
+            return(response.json())
+        else:
+            print(f"Failed to retrieve the exercises by the exercise name: {nameInfo["name"]}. Status code: {response.status_code}")
