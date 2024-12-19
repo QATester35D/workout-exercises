@@ -1,9 +1,28 @@
 import json
 import time
 import apiCalls
+import databaseHelpers
 
-exercises=apiCalls.GetExercises()  # Instantiate the class
+########################################################################################################
+# Instantiate the classes for the API and database calls
+exercises=apiCalls.GetExercises()
+dbHelpers=databaseHelpers.DatabaseOfExercises()
 
+########################################################################################################
+# Working JSON files for the data source
+# fileName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\APIs\\response.json"
+fileName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\APIs\\misc_exercises.json"
+with open(fileName, 'r') as file:
+    data = json.load(file)
+
+sizeOfData=len(data)
+for i in range(0,sizeOfData):
+    dbHelpers.dbInsertExercise(data[i])
+
+time.sleep(1)
+
+########################################################################################################
+# API calls
 parts=exercises.get_body_part_list()
 print("Size of the list of body parts returned is:",len(parts))
 for i in parts:
@@ -28,7 +47,9 @@ for muscle in muscles:
 fullExerciseList=exercises.get_exercises(limit=10,offset=0)
 print("Size of the list of exercises is:",len(fullExerciseList))
 
+
 exercisesById=exercises.get_exercises_by_id("0007")
+dbHelpers.dbInsertExercise(exercisesById)
 print("Size of the list of exercises is:",len(exercisesById))
 
 exercisesByName=exercises.get_exercises_by_name(name="pulldown",limit=10,offset=0)
