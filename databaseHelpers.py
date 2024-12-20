@@ -33,3 +33,11 @@ class DatabaseOfExercises:
             else:
                 listValues=listValues+","+jsonList[i]
         return(listValues)
+    
+    def retrieveExercises(self,bodyPart):
+        cur=self.cur
+        sql="SELECT * FROM exercises WHERE bodyPart = %s"
+        val=(bodyPart, )
+        cur.execute(sql,val)
+        exerciseResult = cur.fetchall()
+        return(exerciseResult)

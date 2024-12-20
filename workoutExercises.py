@@ -9,6 +9,10 @@ exercises=apiCalls.GetExercises()
 dbHelpers=databaseHelpers.DatabaseOfExercises()
 
 ########################################################################################################
+exerciseResult=dbHelpers.retrieveExercises("core")
+time.sleep(1)
+
+########################################################################################################
 # Working JSON files for the data source
 # fileName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\APIs\\response.json"
 fileName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\APIs\\misc_exercises.json"
