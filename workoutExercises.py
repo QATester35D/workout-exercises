@@ -2,6 +2,7 @@ import json
 import time
 import apiCalls
 import databaseHelpers
+import os
 
 ########################################################################################################
 # Instantiate the classes for the API and database calls
@@ -9,19 +10,25 @@ exercises=apiCalls.GetExercises()
 dbHelpers=databaseHelpers.DatabaseOfExercises()
 
 ########################################################################################################
-exerciseResult=dbHelpers.retrieveExercises("core")
-time.sleep(1)
+# Process through this folder opening each JSON file and insert the values into the database
+# folderName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\jsonFilesForWorkouts\\misc_exercises.json"
+folderName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\jsonFilesForWorkouts\\"
 
-########################################################################################################
-# Working JSON files for the data source
-# fileName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\APIs\\response.json"
-fileName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\APIs\\misc_exercises.json"
-with open(fileName, 'r') as file:
-    data = json.load(file)
+# iterate over files in the directory
+for filename in os.listdir(folderName):
+    fullName = os.path.join(folderName, filename)
+    # checking if it is a file
+    if os.path.isfile(fullName):
+        print("Processing the exercise file",fullName)
+        # origFile = open(fullName, encoding="utf-8") #open original file
 
-sizeOfData=len(data)
-for i in range(0,sizeOfData):
-    dbHelpers.dbInsertExercise(data[i])
+        with open(fullName, 'r') as file:
+            data = json.load(file)
+            sizeOfData=len(data)
+            for i in range(0,sizeOfData):
+                dbHelpers.dbInsertExercise(data[i])
+    
+        file.close()
 
 time.sleep(1)
 
@@ -58,5 +65,8 @@ print("Size of the list of exercises is:",len(exercisesById))
 
 exercisesByName=exercises.get_exercises_by_name(name="pulldown",limit=10,offset=0)
 print("Size of the list of exercises is:",len(exercisesByName))
+
+########################################################################################################
+exerciseResult=dbHelpers.retrieveExercises("core")
 
 time.sleep(1)
