@@ -37,13 +37,18 @@ class DatabaseOfExercises:
     
     def retrieveExercisesbyBodyPart(self,bodyPart,nbrOfExercises):
         cur=self.cur
-        # sql="SELECT * FROM exercises WHERE bodyPart = %s"
-        match bodyPart:
-            case bodyPart if bodyPart in ["biceps","triceps"]:
-                sql="select distinct * from exercises WHERE target = %s ORDER BY RAND() limit %s"
-            case _:
-                sql="select distinct * from exercises WHERE bodyPart = %s ORDER BY RAND() limit %s"
-        val=(bodyPart,nbrOfExercises, )
+        sql="select distinct * from exercises WHERE bodyPart = %s ORDER BY RAND() limit %s"
+        nbrOfExercises=int(nbrOfExercises)
+        val=(bodyPart,nbrOfExercises)
+        cur.execute(sql,val)
+        exerciseResult = cur.fetchall()
+        return(exerciseResult)
+
+    def retrieveExercisesbyTargetPart(self,bodyPart,nbrOfExercises):
+        cur=self.cur
+        sql="select distinct * from exercises WHERE target = %s ORDER BY RAND() limit %s"
+        nbrOfExercises=int(nbrOfExercises)
+        val=(bodyPart,nbrOfExercises)
         cur.execute(sql,val)
         exerciseResult = cur.fetchall()
         return(exerciseResult)
@@ -59,14 +64,24 @@ class DatabaseOfExercises:
             newList.append(bodyPart[0])
         return(newList)
 
+    def retrieveTargetTypes(self):
+        cur=self.cur
+        sql="select distinct target from exercises"
+        cur.execute(sql)
+        targetResult=cur.fetchall()
+        #The result set has each itme formatted like a tuple ('value',) so I do this to create a new clean list
+        newList=[]
+        for target in targetResult:
+            newList.append(target[0])
+        return(newList)
+    
     def retrieveExercisesBySelection(self,workoutSelection):
         exerciseList=[]
-        #Randomly bring back 3 exercises per muscle group
         match workoutSelection:
             case "1":
                 muscleGroup=["chest","triceps","abs"]
                 for i in muscleGroup:
-                    val=self.retrieveExercisesbyBodyPart(i,3)
+                    val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
                     exerciseList.extend(val)
             case "2":
                 muscleGroup=["back", "biceps","abs"]
@@ -87,15 +102,24 @@ class DatabaseOfExercises:
                 muscleGroup=["hiit"]
                 val=self.retrieveExercisesbyBodyPart(muscleGroup,1)
                 exerciseList.extend(val)
-            case "6":
-                muscleGroup=["custom"]
-                print("Need to figure out custom - separate method")
             case _:
-                print("The entry is an invalid choice.")
+                print(f"The entry {workoutSelection} is an invalid choice.")
                 return()
-        # cur=self.cur
-        # sql="SELECT * FROM exercises WHERE bodyPart = %s"
-        # val=(workoutSelection, )
-        # cur.execute(sql,val)
-        # exerciseResult = cur.fetchall()
-        return(exerciseList)        
+        return(exerciseList)
+    
+    def element_exists_filter(self, element, muscleList):
+        wasItemFound = filter(lambda x: x == element, muscleList)
+        return any(wasItemFound)
+
+    def retrieveCustomWorkoutPlan(self,workoutSelection,nbr):
+        exerciseList=[]
+        workoutSelection=workoutSelection.replace(", ",",") #in case the person enters a space between names
+        specifiedMuscleList=workoutSelection.split(",")
+        bodyParts=self.retrieveBodyPartTypes()
+        for i in specifiedMuscleList:
+            if self.element_exists_filter(i, bodyParts):
+                val=self.retrieveExercisesbyBodyPart(i,nbr)
+            else:
+                val=self.retrieveExercisesbyTargetPart(i,nbr)
+            exerciseList.extend(val)
+        return(exerciseList)
