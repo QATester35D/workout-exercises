@@ -1,4 +1,5 @@
 import mysql.connector
+import random
 import time
 
 ################################################################################################
@@ -34,25 +35,38 @@ class DatabaseOfExercises:
             else:
                 listValues=listValues+","+jsonList[i]
         return(listValues)
-    
+
     def retrieveExercisesbyBodyPart(self,bodyPart,nbrOfExercises):
         cur=self.cur
-        sql="select distinct * from exercises WHERE bodyPart = %s ORDER BY RAND() limit %s"
+        if bodyPart == "legs":
+            sql="select distinct * from exercises WHERE bodyPart like %s ORDER BY RAND() limit %s"
+            bodyPart="%legs"
+        else:
+            sql="select distinct * from exercises WHERE bodyPart = %s ORDER BY RAND() limit %s"
         nbrOfExercises=int(nbrOfExercises)
         val=(bodyPart,nbrOfExercises)
         cur.execute(sql,val)
         exerciseResult = cur.fetchall()
         return(exerciseResult)
 
-    def retrieveExercisesbyTargetPart(self,bodyPart,nbrOfExercises):
+    def retrieveExercisesbyBodyPartTargetPart(self,bodyPart,target,nbrOfExercises):
         cur=self.cur
-        sql="select distinct * from exercises WHERE target = %s ORDER BY RAND() limit %s"
+        sql="select distinct * from exercises WHERE bodyPart=%s and target = %s ORDER BY RAND() limit %s"
         nbrOfExercises=int(nbrOfExercises)
-        val=(bodyPart,nbrOfExercises)
+        val=(bodyPart,target,nbrOfExercises)
         cur.execute(sql,val)
         exerciseResult = cur.fetchall()
         return(exerciseResult)
-    
+
+    def retrieveExercisesbyTargetPart(self,target,nbrOfExercises):
+        cur=self.cur
+        sql="select distinct * from exercises WHERE target = %s ORDER BY RAND() limit %s"
+        nbrOfExercises=int(nbrOfExercises)
+        val=(target,nbrOfExercises)
+        cur.execute(sql,val)
+        exerciseResult = cur.fetchall()
+        return(exerciseResult)
+
     def retrieveBodyPartTypes(self):
         cur=self.cur
         sql="select distinct bodyPart from exercises"
@@ -64,7 +78,7 @@ class DatabaseOfExercises:
             newList.append(bodyPart[0])
         return(newList)
 
-    def retrieveTargetTypes(self):
+    def retrieveListOfTargetTypes(self):
         cur=self.cur
         sql="select distinct target from exercises"
         cur.execute(sql)
@@ -78,27 +92,60 @@ class DatabaseOfExercises:
     def retrieveExercisesBySelection(self,workoutSelection):
         exerciseList=[]
         match workoutSelection:
-            case "1":
+            case 1:
                 muscleGroup=["chest","triceps","abs"]
                 for i in muscleGroup:
-                    val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
+                    if i == "triceps":
+                        #"bodyPart": "upper arms" | "target": "triceps"
+                        val=self.retrieveExercisesbyTargetPart("upper arms",i,3)
+                    else:
+                        val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
                     exerciseList.extend(val)
-            case "2":
+            case 2:
                 muscleGroup=["back", "biceps","abs"]
                 for i in muscleGroup:
-                    val=self.retrieveExercisesbyBodyPart(i,3)
+                    if i == "biceps":
+                        #"bodyPart": "upper arms" | "target": "biceps"
+                        val=self.retrieveExercisesbyTargetPart("upper arms",i,3)
+                    else:
+                        val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
                     exerciseList.extend(val)
-            case "3":
+            case 3:
                 muscleGroup=["legs", "shoulders","abs"]
+                #retrieve one exercise for each target group for legs
                 for i in muscleGroup:
-                    val=self.retrieveExercisesbyBodyPart(i,3)
+                    if i == "legs":
+                        legs=["upper legs,hamstrings","upper legs,quads","upper legs,glutes","upper legs,adductors","lower legs,calves"]
+                        for j in legs:
+                            legType=j.split(",")
+                            val=self.retrieveExercisesbyTargetPart(legType[0],legType[1],1)
+                            exerciseList.extend(val)
+                    else:
+                        val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
+                        exerciseList.extend(val)
+            case 4:
+                #Just legs - retrieve one exercise for each target group for legs
+                legs=["upper legs,hamstrings","upper legs,quads","upper legs,glutes","upper legs,adductors","lower legs,calves"]
+                for j in legs:
+                    legType=j.split(",")
+                    val=self.retrieveExercisesbyTargetPart(legType[0],legType[1],2)
                     exerciseList.extend(val)
-            case "4":
-                muscleGroup=["chest","triceps","back", "biceps","legs", "shoulders","abs"] #one exercise per muscle group
+            case 5:
+                muscleGroup=["chest","triceps","back","biceps","legs","shoulders","abs"] #one exercise per muscle group
                 for i in muscleGroup:
-                    val=self.retrieveExercisesbyBodyPart(i,1)
+                    if i in ["triceps", "biceps"]:
+                        #"bodyPart": "upper arms" | "target": "triceps"
+                        val=self.retrieveExercisesbyTargetPart(i,1)
+                    else:
+                        val=self.retrieveExercisesbyBodyPart(i,1)
                     exerciseList.extend(val)
-            case "5":
+            case 6:
+                #Verify this later when I insert HIIT exercises into the database
+                muscleGroup=["hiit"]
+                val=self.retrieveExercisesbyBodyPart(muscleGroup,1)
+                exerciseList.extend(val)
+            case 7:
+                #Custom
                 muscleGroup=["hiit"]
                 val=self.retrieveExercisesbyBodyPart(muscleGroup,1)
                 exerciseList.extend(val)

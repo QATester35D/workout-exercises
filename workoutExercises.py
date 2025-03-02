@@ -10,6 +10,12 @@ exercises=apiCalls.GetExercises()
 dbHelpers=databaseHelpers.DatabaseOfExercises()
 
 ########################################################################################################
+#Temp area
+bodyPartList=dbHelpers.retrieveBodyPartTypes()
+exerciseResult=dbHelpers.retrieveExercisesBySelection(1)
+time.sleep(1)
+
+########################################################################################################
 # Process through this folder opening each JSON file and insert the values into the database
 # folderName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\jsonFilesForWorkouts\\misc_exercises.json"
 folderName="C:\\Users\\shawn\\OneDrive\\Documents\\Tech\\jsonFilesForWorkouts\\"

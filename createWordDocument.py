@@ -11,14 +11,15 @@ print("Enter the number for the workout combo or select custom workout:")
 print("1 - Chest, triceps, abs")
 print("2 - Back, biceps, abs")
 print("3 - Legs, shoulders, abs")
-print("4 - Full body workout (one exercise per major muscle group)")
-print("5 - HIIT workout")
-print("6 - Custom (you can specify major and minor muscles here)")
+print("4 - Just legs")
+print("5 - Full body workout (one exercise per major muscle group)")
+print("6 - HIIT workout")
+print("7 - Custom (type in major and minor muscles separated by commas)")
 print("q - Quit program")
-workoutSelection=input("Enter the number of your workout selection: ")
+workoutSelection=int(input("Enter the number of your workout selection: "))
 match workoutSelection:
-    case workoutSelection if workoutSelection in range (1,5):
-        exercise=dbHelpers.retrieveExercisesBySelection(workoutSelection)
+    case workoutSelection if workoutSelection in range (1,6):
+        exerciseList=dbHelpers.retrieveExercisesBySelection(workoutSelection)
     case "6":
         os.system('cls')
         print("Custom workout by major and/or minor muscle group(s)...")
