@@ -89,7 +89,7 @@ class DatabaseOfExercises:
             newList.append(target[0])
         return(newList)
     
-    def retrieveExercisesBySelection(self,workoutSelection):
+    def retrieveExercisesBySelection(self,workoutSelection,*muscles):
         exerciseList=[]
         match workoutSelection:
             case 1:
@@ -146,9 +146,18 @@ class DatabaseOfExercises:
                 exerciseList.extend(val)
             case 7:
                 #Custom
-                muscleGroup=["hiit"]
-                val=self.retrieveExercisesbyBodyPart(muscleGroup,1)
-                exerciseList.extend(val)
+                muscleGroup=[item.strip() for item in muscles[0].split(',')]
+                nbrOfExercises=muscles[1]
+                nbrOfMuscles=len(muscleGroup)
+                for i in muscleGroup:
+                    if i in ['abs', 'pectorals', 'hamstrings', 'triceps', 'quads', 'biceps', 'glutes', 'delts', 'serratus anterior', 'forearms', 'calves', 'traps', 'upper back', 'lats', 'adductors', 'spine', 'cardiovascular system', 'abductors', 'levator scapulae']:
+                        val=self.retrieveExercisesbyTargetPart(i,nbrOfExercises)
+                        exerciseList.extend(val)
+                    elif i in ['abs', 'chest', 'upper legs', 'upper arms', 'shoulders', 'lower arms', 'lower legs', 'back', 'cardio', 'neck']:
+                        val=self.retrieveExercisesbyBodyPart(i,nbrOfExercises)
+                        exerciseList.extend(val)
+                    else:
+                        print(f"The entry {i} is an invalid choice.")
             case _:
                 print(f"The entry {workoutSelection} is an invalid choice.")
                 return()

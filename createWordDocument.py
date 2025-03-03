@@ -18,20 +18,20 @@ print("7 - Custom (type in major and minor muscles separated by commas)")
 print("q - Quit program")
 workoutSelection=int(input("Enter the number of your workout selection: "))
 match workoutSelection:
-    case workoutSelection if workoutSelection in range (1,6):
+    case workoutSelection if workoutSelection in range (1,7):
         exerciseList=dbHelpers.retrieveExercisesBySelection(workoutSelection)
-    case "6":
+    case 7:
         os.system('cls')
         print("Custom workout by major and/or minor muscle group(s)...")
         print("The major body parts available are:")
         print(bodyParts)
         print("The minor body parts available are:")
-        targetGroups=dbHelpers.retrieveTargetTypes()
+        targetGroups=dbHelpers.retrieveListOfTargetTypes()
         print(targetGroups)
         print(" ")
         muscleGroups=input("Enter in the muscle groups you want to workout, separated by commas (spelling matters): ")
         nbrOfExercises=input("How many exercises do you want brought back for each muscle group? ")
-        exercise=dbHelpers.retrieveCustomWorkoutPlan(muscleGroups, nbrOfExercises)
+        exercise=dbHelpers.retrieveExercisesBySelection(workoutSelection,muscleGroups, nbrOfExercises)
     case "q" | "Q":
         print ("Quiting the program")
         exit()
