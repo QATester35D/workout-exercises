@@ -95,7 +95,7 @@ class DatabaseOfExercises:
                 for i in muscleGroup:
                     if i == "triceps":
                         #"bodyPart": "upper arms" | "target": "triceps"
-                        val=self.retrieveExercisesbyTargetPart("upper arms",i,3)
+                        val=self.retrieveExercisesbyTargetPart(i,3)
                     else:
                         val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
                     exerciseList.extend(val)
@@ -104,7 +104,7 @@ class DatabaseOfExercises:
                 for i in muscleGroup:
                     if i == "biceps":
                         #"bodyPart": "upper arms" | "target": "biceps"
-                        val=self.retrieveExercisesbyTargetPart("upper arms",i,3)
+                        val=self.retrieveExercisesbyTargetPart(i,3)
                     else:
                         val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
                     exerciseList.extend(val)
@@ -113,20 +113,18 @@ class DatabaseOfExercises:
                 #retrieve one exercise for each target group for legs
                 for i in muscleGroup:
                     if i == "legs":
-                        legs=["upper legs,hamstrings","upper legs,quads","upper legs,glutes","upper legs,adductors","lower legs,calves"]
+                        legs=["hamstrings","quads","glutes","adductors","calves"]
                         for j in legs:
-                            legType=j.split(",")
-                            val=self.retrieveExercisesbyTargetPart(legType[0],legType[1],1)
+                            val=self.retrieveExercisesbyTargetPart(j,1)
                             exerciseList.extend(val)
                     else:
                         val=self.retrieveExercisesbyBodyPart(i,3) #Randomly bring back 3 exercises per muscle group
                         exerciseList.extend(val)
             case 4:
                 #Just legs - retrieve one exercise for each target group for legs
-                legs=["upper legs,hamstrings","upper legs,quads","upper legs,glutes","upper legs,adductors","lower legs,calves"]
+                legs=["hamstrings","quads","glutes","adductors","calves"]
                 for j in legs:
-                    legType=j.split(",")
-                    val=self.retrieveExercisesbyTargetPart(legType[0],legType[1],2)
+                    val=self.retrieveExercisesbyTargetPart(j,2)
                     exerciseList.extend(val)
             case 5:
                 muscleGroup=["chest","triceps","back","biceps","legs","shoulders","abs"] #one exercise per muscle group
