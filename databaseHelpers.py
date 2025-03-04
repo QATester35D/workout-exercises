@@ -1,6 +1,4 @@
 import mysql.connector
-import random
-import time
 
 ################################################################################################
 class DatabaseOfExercises:
