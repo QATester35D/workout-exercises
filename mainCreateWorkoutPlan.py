@@ -1,6 +1,7 @@
 from docx import Document
 from docx.shared import Inches
 import databaseHelpers
+import createWordDocument
 import os
 
 dbHelpers=databaseHelpers.DatabaseOfExercises()
@@ -32,7 +33,7 @@ match workoutSelection:
         print(" ")
         muscleGroups=input("Enter in the muscle groups you want to workout, separated by commas (spelling matters): ")
         nbrOfExercises=input("How many exercises do you want brought back for each muscle group? ")
-        exercise=dbHelpers.retrieveExercisesBySelection(workoutSelection,muscleGroups, nbrOfExercises)
+        exerciseList=dbHelpers.retrieveExercisesBySelection(workoutSelection,muscleGroups, nbrOfExercises)
     case "q" | "Q":
         print ("Quiting the program")
         exit()
@@ -40,10 +41,13 @@ match workoutSelection:
         print("Not a valid selection")
         exit()
 
+
 ########################################################################################################
-document = Document()
-document.add_heading('Workout Exercises', 0)
-bodyParts=dbHelpers.retrieveBodyPartTypes()
-
-
-document.save('c:\\temp\\workoutExercises.docx')
+# Create the Word document
+########################################################################################################
+document=createWordDocument.CreateWorkoutPlan()
+workOutFocus=document.docWorkOutSelection(workoutSelection)
+document.docCreateHeading(workOutFocus)
+document.docCreateParagraph(workOutFocus)
+document.docWriteOutExercises(exerciseList)
+document.docSave('c:\\temp\\workoutExercises.docx')
