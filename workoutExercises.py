@@ -5,15 +5,13 @@ import databaseHelpers
 import os
 
 ########################################################################################################
+# This file was mainly a one-time use script to access a site using their API to retrieve the exercises 
+# they offered, write them to a file and then load them into a database. Once this was done this script
+# was not used anymore since all the exercises were retrieved (they had a limited amount offered).
+########################################################################################################
 # Instantiate the classes for the API and database calls
 exercises=apiCalls.GetExercises()
 dbHelpers=databaseHelpers.DatabaseOfExercises()
-
-########################################################################################################
-#Temp area
-bodyPartList=dbHelpers.retrieveBodyPartTypes()
-exerciseResult=dbHelpers.retrieveExercisesBySelection(1)
-time.sleep(1)
 
 ########################################################################################################
 # Process through this folder opening each JSON file and insert the values into the database

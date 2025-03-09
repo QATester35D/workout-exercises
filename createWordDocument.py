@@ -18,6 +18,9 @@ class CreateWorkoutPlan:
         document=self.document
         # workoutFocus=("1 - Chest, triceps, abs","2 - Back, biceps, abs","3 - Legs, shoulders, abs","4 - Just legs","5 - Full body workout","6 - HIIT workout","7 - Custom")
         # workoutSelectionText=workOutSelection-1
+        p = document.add_paragraph('\n')
+        paragraph_format = p.paragraph_format
+        paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
         document.add_heading('Workout Plan', 0)
         document.add_heading('Brought to you by QATester35D', 1)
         document.add_heading('Muscle Group Focus: '+workoutFocus, 2)
