@@ -4,6 +4,7 @@ import databaseHelpers
 import createWordDocument
 import os
 
+################
 dbHelpers=databaseHelpers.DatabaseOfExercises()
 bodyParts=dbHelpers.retrieveBodyPartTypes()
 os.system('cls')
@@ -17,6 +18,7 @@ print("4 - Just legs")
 print("5 - Full body workout (one exercise per major muscle group)")
 print("6 - HIIT workout")
 print("7 - Custom (type in major and minor muscles separated by commas)")
+print("8 - Custom by exercise id (type in exercise id separated by commas)")
 print("q - Quit program")
 workoutSelection=int(input("Enter the number of your workout selection: "))
 match workoutSelection:

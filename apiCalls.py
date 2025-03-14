@@ -133,3 +133,29 @@ class GetExercises:
             return(response.json())
         else:
             print(f"Failed to retrieve the exercises by the exercise name: {nameInfo["name"]}. Status code: {response.status_code}")
+
+#This API call is not returning any data; it says the ID is invalid when they should be valid
+class GetExerciseImage:
+    def __init__(self):
+        self.url="https://exercisedb.p.rapidapi.com/image"
+        self.headers = {
+        'X-RapidAPI-Key': '65fee3dd8cmsh68753f6c119af56p16af81jsn70e7e93756dd', 
+        'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
+        }
+
+    def get_exercise_image(self,imageId):
+        url=self.url
+        headers=self.headers
+        imageURL=f"{url}/image/{imageId}" 
+        response = requests.get(imageURL, headers=headers)
+        if response.status_code == 200:
+            print(f"Retrieved the image for the exercise.")
+            return(response.content)
+        else:
+            print(f"Failed to retrieve the image for the exercise. Status code: {response.status_code}")
+
+# #temp
+# import time
+# getExerciseImage=GetExerciseImage()
+# image=getExerciseImage.get_exercise_image("758")
+# time.sleep(1)

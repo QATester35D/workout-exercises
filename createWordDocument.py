@@ -29,24 +29,18 @@ class CreateWorkoutPlan:
     def docCreateParagraph(self, workoutFocus):
         document=self.document
         p = document.add_paragraph('\n')
-        p = document.add_paragraph('This document is a workout plan created by your selection of the muscle group specified.')
+        p = document.add_paragraph('This document is a workout plan created by your selection of the following muscle group that you specified.')
         paragraph_format = p.paragraph_format
         paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.add_run('\n')
         p.add_run(workoutFocus).bold = True
-        p.add_run('\n')
+        p.add_run('\n\n')
         p.add_run('These are a random selection of exercises for each muscle group.').italic = True
 
     def docWriteOutExercises(self, exerciseList):
         document=self.document
         for exercise in exerciseList:
             #Exercise 6 and 7 came from blobs so they need to be decoded.
-            # element6=exercise[6].decode('utf-8')
-            # lenElement6=len(element6)
-            # element6=element6[2:lenElement6-1]
-            # element7=exercise[7].decode('utf-8')
-            # lenElement7=len(element7)
-            # element7=element7[2:lenElement7-1]
             p = document.add_paragraph('\n')
             p.add_run('Exercise ID: '+str(exercise[0])).italic = True
             p.add_run('\n')
@@ -63,6 +57,7 @@ class CreateWorkoutPlan:
             p.add_run('Secondary Muscles affected: '+exercise[6].decode('utf-8')).italic = True
             p.add_run('\n')
             p.add_run('Instructions: '+exercise[7].decode('utf-8'))
+            imagePath="./exerciseImages/"
   
     def docSave(self, fileName):
         self.document.save(fileName)

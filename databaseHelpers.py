@@ -154,6 +154,13 @@ class DatabaseOfExercises:
                         exerciseList.extend(val)
                     else:
                         print(f"The entry {i} is an invalid choice.")
+            case 8:
+                #Custom by exercise id
+                exerciseList=[]
+                exerciseGroup=[item.strip() for item in muscles[0].split(',')]
+                for i in exerciseGroup:
+                    val=self.retrieveExercisesbyExerciseId(i)
+                    exerciseList.extend(val)
             case _:
                 print(f"The entry {workoutSelection} is an invalid choice.")
                 return()
